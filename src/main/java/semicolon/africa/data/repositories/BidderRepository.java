@@ -2,9 +2,13 @@ package semicolon.africa.data.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import semicolon.africa.data.models.Bidder;
-import semicolon.africa.data.models.Bide;
-import semicolon.africa.data.models.Product;
+
+import java.util.Optional;
+
 
 public interface BidderRepository extends MongoRepository<Bidder, String> {
-    Bide bideOnProduct(String productId,String productPrice);
+
+    boolean existsByEmail(String email);
+
+    Optional<Bidder> findByEmail(String email);
 }

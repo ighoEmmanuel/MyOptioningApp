@@ -10,7 +10,4 @@ import java.util.List;
 @Document(collection = "sellers")
 public class Seller extends User{
     private List<Product> products;
-
-
-
 }

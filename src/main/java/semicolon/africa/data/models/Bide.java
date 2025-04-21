@@ -9,7 +9,5 @@ import java.math.BigDecimal;
 public class Bide {
     @Id
     private String id;
-
-    private String productId;
-    private BigDecimal price;
+    private Product product;
 }
