@@ -8,4 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "bidder")
 public class Bidder extends User{
 
+    //
+
 }
