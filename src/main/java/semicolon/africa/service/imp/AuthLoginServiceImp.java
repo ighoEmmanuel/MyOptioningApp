@@ -1,4 +1,4 @@
-package semicolon.africa.service;
+package semicolon.africa.service.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +13,7 @@ import semicolon.africa.dtos.reposonse.LogInResponse;
 import semicolon.africa.dtos.request.LoginDto;
 import semicolon.africa.exceptions.EmailError;
 import semicolon.africa.exceptions.PasswordError;
+import semicolon.africa.service.AuthLoginService;
 
 import java.util.Optional;
 @Service
@@ -32,6 +33,7 @@ public class AuthLoginServiceImp implements AuthLoginService {
 
     @Override
     public LogInResponse login(LoginDto loginDto) {
+        LogInResponse logInResponse = new LogInResponse();
         String email = loginDto.getEmail();
         String rawPassword = loginDto.getPassword();
 
@@ -39,27 +41,39 @@ public class AuthLoginServiceImp implements AuthLoginService {
         if (adminOpt.isPresent()) {
             Admin admin = adminOpt.get();
             if (passwordEncoder.matches(rawPassword, admin.getPassword())) {
-                return new LogInResponse(admin.getId(), admin.getUserName(), admin.getEmail(), "ADMIN");
+                logInResponse.setId(admin.getId());
+                logInResponse.setEmail(email);
+                logInResponse.setUsername(admin.getUserName());
+                logInResponse.setRole("ADMIN");
+                return logInResponse;
             }
-            throw new PasswordError("Incorrect password for Admin");
+            throw new PasswordError("Invalid password or email");
         }
 
         Optional<Bidder> bidderOpt = bidderRepository.findByEmail(email);
         if (bidderOpt.isPresent()) {
             Bidder bidder = bidderOpt.get();
             if (passwordEncoder.matches(rawPassword, bidder.getPassword())) {
-                return new LogInResponse(bidder.getId(), bidder.getUserName(), bidder.getEmail(), "BIDDER");
+                logInResponse.setId(bidder.getId());
+                logInResponse.setEmail(bidder.getEmail());
+                logInResponse.setUsername(bidder.getUserName());
+                logInResponse.setRole("Bidder");
+                return logInResponse;
             }
-            throw new PasswordError("Incorrect password for Bidder");
+            throw new PasswordError("Invalid password or email");
         }
 
         Optional<Seller> sellerOpt = sellerRepository.findByEmail(email);
         if (sellerOpt.isPresent()) {
             Seller seller = sellerOpt.get();
             if (passwordEncoder.matches(rawPassword, seller.getPassword())) {
-                return new LogInResponse(seller.getId(), seller.getUserName(), seller.getEmail(), "SELLER");
+                logInResponse.setId(seller.getId());
+                logInResponse.setEmail(seller.getEmail());
+                logInResponse.setUsername(seller.getUserName());
+                logInResponse.setRole("SELLER");
+                return logInResponse;
             }
-            throw new PasswordError("Incorrect password for Seller");
+            throw new PasswordError("Invalid password or email");
         }
 
         throw new EmailError("User not found with email: " + email);

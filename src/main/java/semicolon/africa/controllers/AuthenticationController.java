@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import semicolon.africa.dtos.reposonse.LogInResponse;
 import semicolon.africa.dtos.request.LoginDto;
 import semicolon.africa.service.AuthLoginService;
-import semicolon.africa.service.AuthLoginServiceImp;
+import semicolon.africa.service.imp.AuthLoginServiceImp;
 
 @RestController
 @RequestMapping("/api/auth")

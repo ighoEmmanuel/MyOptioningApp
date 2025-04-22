@@ -1,13 +1,10 @@
 package semicolon.africa.controllers;
 import org.springframework.web.bind.annotation.*;
-import semicolon.africa.data.models.Bidder;
 import semicolon.africa.data.models.Product;
-import semicolon.africa.dtos.reposonse.BidderResponse;
-import semicolon.africa.dtos.request.BidderDto;
-import semicolon.africa.service.BidderImpl;
+import semicolon.africa.dtos.reposonse.RegisterResponse;
+import semicolon.africa.dtos.request.RegisterDto;
+import semicolon.africa.service.imp.BidderServiceImpl;
 import semicolon.africa.service.BidderService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -15,12 +12,12 @@ public class BidderControllers {
 
     private final BidderService bidderService;
 
-    public BidderControllers(BidderImpl bidderService) {
+    public BidderControllers(BidderServiceImpl bidderService) {
         this.bidderService = bidderService;
     }
 
     @PostMapping("/register/bidder")
-    public BidderResponse registerBidder(@RequestBody BidderDto request) {
+    public RegisterResponse registerBidder(@RequestBody RegisterDto request) {
         return bidderService.register(request);
     }
 

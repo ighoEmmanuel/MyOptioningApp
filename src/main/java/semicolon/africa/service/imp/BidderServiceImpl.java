@@ -1,32 +1,36 @@
-package semicolon.africa.service;
+package semicolon.africa.service.imp;
 
 import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Bidder;
 import semicolon.africa.data.models.Product;
 import semicolon.africa.data.repositories.BidderRepository;
-import semicolon.africa.dtos.reposonse.BidderResponse;
-import semicolon.africa.dtos.request.BidderDto;
+import semicolon.africa.data.repositories.SellerRepository;
+import semicolon.africa.dtos.reposonse.RegisterResponse;
+import semicolon.africa.dtos.request.RegisterDto;
 import semicolon.africa.exceptions.EmailError;
 import semicolon.africa.exceptions.PasswordError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import semicolon.africa.service.BidderService;
 
 
 @Service
-public class BidderImpl implements BidderService {
+public class BidderServiceImpl implements BidderService {
 
     private final BidderRepository bidderRepository;
+    private final SellerRepository sellerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public BidderImpl(BidderRepository bidderRepository, BCryptPasswordEncoder passwordEncoder) {
+    public BidderServiceImpl(BidderRepository bidderRepository, SellerRepository sellerRepository, BCryptPasswordEncoder passwordEncoder) {
         this.bidderRepository = bidderRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
-    public BidderResponse register(BidderDto bidderDto) {
+    public RegisterResponse register(RegisterDto bidderDto) {
         if (bidderDto == null) {
             throw new IllegalArgumentException("Bidder cannot be null");
         }
@@ -44,7 +48,7 @@ public class BidderImpl implements BidderService {
         }
 
 
-        if (bidderRepository.existsByEmail(bidderDto.getEmail())) {
+        if (bidderRepository.existsByEmail(bidderDto.getEmail())||sellerRepository.existsByEmail(bidderDto.getEmail())) {
             throw new EmailError("Email already in use");
         }
 
@@ -52,15 +56,16 @@ public class BidderImpl implements BidderService {
         String encodedPassword = passwordEncoder.encode(bidderDto.getPassword());
         bidderDto.setPassword(encodedPassword);
         Bidder bidder = new Bidder();
-        bidder.setEmail(bidderDto.getEmail());
+        String email = bidderDto.getEmail();
+        bidder.setEmail(email);
         bidder.setPassword(bidderDto.getPassword());
         bidder.setUserName(bidderDto.getUserName());
         bidderRepository.save(bidder);
-        BidderResponse bidderResponse = new BidderResponse();
-        bidderResponse.setBidderEmail(bidder.getEmail());
-        bidderResponse.setBidderId(bidder.getId());
-        bidderResponse.setBidderName(bidder.getUserName());
-        return bidderResponse;
+        RegisterResponse registerResponse = new RegisterResponse();
+        registerResponse.setBidderEmail(bidder.getEmail());
+        registerResponse.setBidderId(bidder.getId());
+        registerResponse.setBidderName(bidder.getUserName());
+        return registerResponse;
     }
 
     @Override
