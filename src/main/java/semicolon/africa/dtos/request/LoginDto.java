@@ -9,11 +9,10 @@ import lombok.Data;
 @Data
 final public class LoginDto {
     @NotBlank(message = "Email is required")
-    @Size(min = 2, max = 50)
-    @Email
+    @Email(message = "invalid email type")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 4 characters")
+    @Size(min = 4, max = 10, message = "Password must be at least 4 characters and maximum of 10")
     private String password;
 }
