@@ -13,17 +13,15 @@ import semicolon.africa.service.imp.AuthLoginServiceImp;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
+    private final AuthLoginService authLoginService;
 
-    private final AuthLoginService authenticationService;
-
-    public AuthenticationController(AuthLoginServiceImp authenticationService) {
-        this.authenticationService = authenticationService;
-    }
-
+    public AuthenticationController(AuthLoginServiceImp authLoginServiceImpl){
+        this.authLoginService = authLoginServiceImpl;
+    };
 
     @PostMapping("/login")
     public LogInResponse login(@Valid @RequestBody LoginDto loginDto) {
-        return authenticationService.login(loginDto);
+        return authLoginService.login(loginDto);
     }
 
 

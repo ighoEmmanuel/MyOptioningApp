@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "products")
@@ -14,5 +15,6 @@ public class Product {
     private String id;
     private String name;
     private BigDecimal price;
-
+    private LocalDateTime bidStartTime;
+    private LocalDateTime bidStopTime;
 }

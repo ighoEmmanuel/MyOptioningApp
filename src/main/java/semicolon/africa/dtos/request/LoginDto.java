@@ -13,6 +13,6 @@ final public class LoginDto {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 4, max = 10, message = "Password must be at least 4 characters and maximum of 10")
+//    ?
     private String password;
 }
