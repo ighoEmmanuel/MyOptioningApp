@@ -4,14 +4,20 @@ import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Bidder;
 import semicolon.africa.data.models.Product;
 import semicolon.africa.data.repositories.BidderRepository;
+import semicolon.africa.data.repositories.ProductRepository;
 import semicolon.africa.data.repositories.SellerRepository;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
+import semicolon.africa.dtos.request.BidDto;
 import semicolon.africa.dtos.request.RegisterDto;
 import semicolon.africa.exceptions.EmailError;
 import semicolon.africa.exceptions.PasswordError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import semicolon.africa.service.BidService;
 import semicolon.africa.service.BidderService;
+import semicolon.africa.service.ProductService;
+
+import java.util.List;
 
 
 @Service
@@ -20,13 +26,19 @@ public class BidderServiceImpl implements BidderService {
     private final BidderRepository bidderRepository;
     private final SellerRepository sellerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ProductRepository productRepository;
+    private final ProductService productService;
+    private final BidService bidService;
 
 
     @Autowired
-    public BidderServiceImpl(BidderRepository bidderRepository, SellerRepository sellerRepository, BCryptPasswordEncoder passwordEncoder) {
+    public BidderServiceImpl(BidderRepository bidderRepository, SellerRepository sellerRepository, BCryptPasswordEncoder passwordEncoder, ProductRepository productRepository, ProductService productService, BidService bidService) {
         this.bidderRepository = bidderRepository;
         this.passwordEncoder = passwordEncoder;
         this.sellerRepository = sellerRepository;
+        this.productRepository = productRepository;
+        this.productService = productService;
+        this.bidService = bidService;
     }
 
     @Override
@@ -69,8 +81,13 @@ public class BidderServiceImpl implements BidderService {
     }
 
     @Override
-    public void bid(String userId, Product product){
+    public void bid(BidDto bidDto){
+        bidService.placeBid(bidDto);
+    }
 
+    @Override
+    public List<Product> viewProduct() {
+        return productService.viewAllProducts();
     }
 
 

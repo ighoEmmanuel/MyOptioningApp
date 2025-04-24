@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Seller;
 import semicolon.africa.data.repositories.BidderRepository;
 import semicolon.africa.data.repositories.SellerRepository;
+import semicolon.africa.dtos.reposonse.AuctionResponse;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
+import semicolon.africa.dtos.request.AuctionProductDto;
 import semicolon.africa.dtos.request.RegisterDto;
 import semicolon.africa.exceptions.EmailError;
 import semicolon.africa.exceptions.PasswordError;
+import semicolon.africa.service.ProductService;
 import semicolon.africa.service.SellerService;
 
 @Service
@@ -18,12 +21,14 @@ public class SellerServiceImpl implements SellerService {
     private final SellerRepository sellerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final BidderRepository bidderRepository;
+    private final ProductService productService;
 
     @Autowired
-    public SellerServiceImpl(SellerRepository sellerRepository, BidderRepository bidderRepository, BCryptPasswordEncoder passwordEncoder) {
+    public SellerServiceImpl(SellerRepository sellerRepository, BidderRepository bidderRepository, BCryptPasswordEncoder passwordEncoder, ProductService productService) {
         this.sellerRepository = sellerRepository;
         this.passwordEncoder = passwordEncoder;
         this.bidderRepository = bidderRepository;
+        this.productService = productService;
     }
 
     @Override
@@ -60,5 +65,10 @@ public class SellerServiceImpl implements SellerService {
         registerResponse.setBidderId(seller.getId());
         registerResponse.setBidderName(seller.getUserName());
         return registerResponse;
+    }
+
+    @Override
+    public AuctionResponse auctionProduct(AuctionProductDto addProductDto) {
+        return productService.auctionProduct(addProductDto);
     }
 }

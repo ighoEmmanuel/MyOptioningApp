@@ -2,13 +2,12 @@ package semicolon.africa.dtos.request;
 
 
 import lombok.Data;
-import semicolon.africa.data.models.Product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class ProductDto {
+public class AuctionProductDto {
     private String productName;
     private BigDecimal price;
     private String sellerId;

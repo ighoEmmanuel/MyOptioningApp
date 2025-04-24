@@ -4,10 +4,12 @@ import semicolon.africa.data.models.Product;
 import semicolon.africa.data.models.Seller;
 import semicolon.africa.data.repositories.ProductRepository;
 import semicolon.africa.data.repositories.SellerRepository;
-import semicolon.africa.dtos.request.ProductDto;
+import semicolon.africa.dtos.reposonse.AuctionResponse;
+import semicolon.africa.dtos.request.AuctionProductDto;
 import semicolon.africa.service.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductDto productDto) {
+    public AuctionResponse auctionProduct(AuctionProductDto productDto) {
         String sellerId = productDto.getSellerId();
         Optional<Seller> seller = sellerRepository.findById(sellerId);
         LocalDateTime startTime = productDto.getBidStart();
@@ -37,5 +39,26 @@ public class ProductServiceImpl implements ProductService {
         product.setBidStopTime(endTime);
         seller.get().getProducts().add(product);
         productRepository.save(product);
+        AuctionResponse auctionResponse = new AuctionResponse();
+        auctionResponse.setProductId(product.getId());
+        auctionResponse.setProductName(product.getName());
+        auctionResponse.setPrice(product.getPrice());
+        return auctionResponse;
     }
+
+    @Override
+    public List<Product> viewAllProducts() {
+        // First, log all products
+        List<Product> allProducts = productRepository.findAll();
+        System.out.println("ALL PRODUCTS: " + allProducts);
+
+        // Then check filtered results
+        LocalDateTime now = LocalDateTime.now();
+        List<Product> activeProducts = productRepository.findByBidStopTimeAfter(now);
+        System.out.println("ACTIVE PRODUCTS: " + activeProducts);
+
+        return activeProducts;
+    }
+
+
 }
