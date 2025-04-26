@@ -6,8 +6,8 @@ import semicolon.africa.data.models.Profile;
 
 @Data
 public class RegisterResponse {
-    private String bidderId;
-    private String bidderName;
-    private String bidderEmail;
+    private String id;
+    private String userName;
+    private String email;
     private Profile profile;
 }

@@ -1,16 +1,19 @@
 package semicolon.africa.service.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Bid;
 import semicolon.africa.data.models.Product;
 import semicolon.africa.data.repositories.BidRepository;
 import semicolon.africa.data.repositories.ProductRepository;
+import semicolon.africa.dtos.reposonse.BidResponse;
 import semicolon.africa.dtos.request.BidDto;
 import semicolon.africa.service.BidService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +29,7 @@ public class  BidServiceImpl implements BidService {
     }
 
     @Override
-    public void placeBid(BidDto bidDto) {
+    public BidResponse placeBid(BidDto bidDto) {
         Optional<Product> originalProduct = productRepository.findById(bidDto.getProductId());
         if (originalProduct.isEmpty()) {
             throw new IllegalArgumentException("Product not found with ID: " + bidDto.getProductId());
@@ -53,5 +56,21 @@ public class  BidServiceImpl implements BidService {
         bid.setPrice(buyerPrice);
         bid.setProductId(sellersProduct.getId());
         bidRepository.save(bid);
+        BidResponse bidResponse = new BidResponse();
+        bidResponse.setBidId(bid.getId());
+        return bidResponse;
     }
+
+
+
+    @Scheduled(fixedRate = 86400000)
+    public void removeExpiredBids() {
+        List<Bid> bidDocuments = bidRepository.findAll();
+        for (Bid bid : bidDocuments) {
+            Optional<Product> product = productRepository.findById(bid.getProductId());
+            if (product.isEmpty()) bidRepository.delete(bid);
+        }
+    }
+
+
 }

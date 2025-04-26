@@ -61,9 +61,9 @@ public class SellerServiceImpl implements SellerService {
         seller.setUserName(registerDto.getUserName());
         sellerRepository.save(seller);
         RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.setBidderEmail(seller.getEmail());
-        registerResponse.setBidderId(seller.getId());
-        registerResponse.setBidderName(seller.getUserName());
+        registerResponse.setEmail(seller.getEmail());
+        registerResponse.setId(seller.getId());
+        registerResponse.setUserName(seller.getUserName());
         return registerResponse;
     }
 

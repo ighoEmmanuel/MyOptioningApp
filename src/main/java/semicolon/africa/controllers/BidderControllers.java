@@ -1,6 +1,7 @@
 package semicolon.africa.controllers;
 import org.springframework.web.bind.annotation.*;
 import semicolon.africa.data.models.Product;
+import semicolon.africa.dtos.reposonse.BidResponse;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
 import semicolon.africa.dtos.request.BidDto;
 import semicolon.africa.dtos.request.RegisterDto;
@@ -25,8 +26,8 @@ public class BidderControllers {
     }
 
     @PostMapping("/bid")
-    public void bid(@RequestBody BidDto bidDto){
-        bidderService.bid(bidDto);
+    public BidResponse bid(@RequestBody BidDto bidDto){
+        return bidderService.bid(bidDto);
     }
 //
     @GetMapping("/viewAllProducts")

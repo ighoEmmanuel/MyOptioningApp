@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
-    List<Product> findByBidStopTimeAfter(LocalDateTime now);
+//    List<Product> findByBidStartTimeBeforeAndBidEndTimeAfter(LocalDateTime now, LocalDateTime now1);
 }

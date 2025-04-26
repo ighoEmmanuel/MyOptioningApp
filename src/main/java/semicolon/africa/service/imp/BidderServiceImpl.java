@@ -6,6 +6,7 @@ import semicolon.africa.data.models.Product;
 import semicolon.africa.data.repositories.BidderRepository;
 import semicolon.africa.data.repositories.ProductRepository;
 import semicolon.africa.data.repositories.SellerRepository;
+import semicolon.africa.dtos.reposonse.BidResponse;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
 import semicolon.africa.dtos.request.BidDto;
 import semicolon.africa.dtos.request.RegisterDto;
@@ -74,15 +75,15 @@ public class BidderServiceImpl implements BidderService {
         bidder.setUserName(bidderDto.getUserName());
         bidderRepository.save(bidder);
         RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.setBidderEmail(bidder.getEmail());
-        registerResponse.setBidderId(bidder.getId());
-        registerResponse.setBidderName(bidder.getUserName());
+        registerResponse.setEmail(bidder.getEmail());
+        registerResponse.setId(bidder.getId());
+        registerResponse.setUserName(bidder.getUserName());
         return registerResponse;
     }
 
     @Override
-    public void bid(BidDto bidDto){
-        bidService.placeBid(bidDto);
+    public BidResponse bid(BidDto bidDto){
+        return bidService.placeBid(bidDto);
     }
 
     @Override

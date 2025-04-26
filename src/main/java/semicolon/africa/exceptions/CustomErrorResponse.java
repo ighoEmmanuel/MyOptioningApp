@@ -1,5 +1,7 @@
 package semicolon.africa.exceptions;
 
+
+
 public class CustomErrorResponse {
     private final int statusCode;
     private final String message;

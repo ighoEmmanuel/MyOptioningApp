@@ -26,7 +26,7 @@ public class SellerController {
     }
 
     @PostMapping("/addProduct")
-    public AuctionResponse addProduct(@RequestBody AuctionProductDto addProductDto) {
+    public AuctionResponse auctionProduct(@RequestBody AuctionProductDto addProductDto) {
         return sellerService.auctionProduct(addProductDto);
     }
 

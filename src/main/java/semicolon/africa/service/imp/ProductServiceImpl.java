@@ -1,4 +1,5 @@
 package semicolon.africa.service.imp;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Product;
 import semicolon.africa.data.models.Seller;
@@ -9,6 +10,7 @@ import semicolon.africa.dtos.request.AuctionProductDto;
 import semicolon.africa.service.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(ProductRepository productRepository, SellerRepository sellerRepository) {
         this.productRepository = productRepository;
         this.sellerRepository = sellerRepository;
+
     }
 
     @Override
@@ -30,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Seller> seller = sellerRepository.findById(sellerId);
         LocalDateTime startTime = productDto.getBidStart();
         LocalDateTime endTime = productDto.getBidStop();
+        validateAuctionTimes(startTime,endTime);
         BigDecimal price = productDto.getPrice();
         String productName = productDto.getProductName();
         Product product = new Product();
@@ -46,17 +50,53 @@ public class ProductServiceImpl implements ProductService {
         return auctionResponse;
     }
 
+    @Scheduled(fixedRate = 86400000)
+    public void removeExpiredProduct() {
+        List<Product> products = productRepository.findAll();
+        List<Product> productsToDelete = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Product product : products) {
+            if (product.getBidStopTime() != null) {
+                LocalDateTime bidStopTimeWithMargin = product.getBidStopTime().plusDays(1);
+                if (now.isAfter(bidStopTimeWithMargin)) {
+                    productsToDelete.add(product);
+                }
+            }
+        }
+
+        productRepository.deleteAll(productsToDelete);
+    }
+
+
+
+    public void validateAuctionTimes(LocalDateTime startTime, LocalDateTime endTime) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (startTime.isBefore(now)) {
+            throw new IllegalArgumentException("Start time must be in the future");
+        }
+
+        if (endTime.isBefore(now)) {
+            throw new IllegalArgumentException("End time must be in the future");
+        }
+
+        if (endTime.isBefore(startTime)) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+    }
+
     @Override
     public List<Product> viewAllProducts() {
-        // First, log all products
         List<Product> allProducts = productRepository.findAll();
-        System.out.println("ALL PRODUCTS: " + allProducts);
-
-        // Then check filtered results
         LocalDateTime now = LocalDateTime.now();
-        List<Product> activeProducts = productRepository.findByBidStopTimeAfter(now);
-        System.out.println("ACTIVE PRODUCTS: " + activeProducts);
-
+        List<Product> activeProducts = new ArrayList<>();
+        for(Product product : allProducts) {
+            if((product.getBidStartTime().isAfter(now)) || product.getBidStopTime().isAfter(now)){
+                activeProducts.add(product);
+            }
+        }
         return activeProducts;
     }
 
