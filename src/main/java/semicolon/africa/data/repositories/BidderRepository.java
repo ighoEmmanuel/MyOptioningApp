@@ -11,4 +11,6 @@ public interface BidderRepository extends MongoRepository<Bidder, String> {
     boolean existsByEmail(String email);
 
     Optional<Bidder> findByEmail(String email);
+
+    boolean existsByUserName(String userName);
 }

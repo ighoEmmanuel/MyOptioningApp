@@ -10,4 +10,6 @@ public interface SellerRepository extends MongoRepository<Seller, String> {
     Optional<Seller> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    boolean existsByUserName(String userName);
 }

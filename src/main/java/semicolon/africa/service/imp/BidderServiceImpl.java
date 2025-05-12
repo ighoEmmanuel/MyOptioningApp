@@ -6,6 +6,7 @@ import semicolon.africa.data.models.Product;
 import semicolon.africa.data.repositories.BidderRepository;
 import semicolon.africa.data.repositories.ProductRepository;
 import semicolon.africa.data.repositories.SellerRepository;
+import semicolon.africa.data.repositories.UserRepository;
 import semicolon.africa.dtos.reposonse.BidResponse;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
 import semicolon.africa.dtos.request.BidDto;
@@ -30,16 +31,18 @@ public class BidderServiceImpl implements BidderService {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final BidService bidService;
+    private final UserRepository userRepository;
 
 
     @Autowired
-    public BidderServiceImpl(BidderRepository bidderRepository, SellerRepository sellerRepository, BCryptPasswordEncoder passwordEncoder, ProductRepository productRepository, ProductService productService, BidService bidService) {
+    public BidderServiceImpl(BidderRepository bidderRepository, SellerRepository sellerRepository, BCryptPasswordEncoder passwordEncoder, ProductRepository productRepository, ProductService productService, BidService bidService, UserRepository userRepository, UserRepository userRepository1) {
         this.bidderRepository = bidderRepository;
         this.passwordEncoder = passwordEncoder;
         this.sellerRepository = sellerRepository;
         this.productRepository = productRepository;
         this.productService = productService;
         this.bidService = bidService;
+        this.userRepository = userRepository1;
     }
 
     @Override
@@ -60,6 +63,8 @@ public class BidderServiceImpl implements BidderService {
             throw new PasswordError("Password must be at least 6 characters");
         }
 
+        if(bidderRepository.existsByUserName(bidderDto.getUserName() )||sellerRepository.existsByUserName(bidderDto.getUserName())) throw new IllegalArgumentException("User Name Taken");
+
 
         if (bidderRepository.existsByEmail(bidderDto.getEmail())||sellerRepository.existsByEmail(bidderDto.getEmail())) {
             throw new EmailError("Email already in use");
@@ -74,6 +79,7 @@ public class BidderServiceImpl implements BidderService {
         bidder.setPassword(bidderDto.getPassword());
         bidder.setUserName(bidderDto.getUserName());
         bidderRepository.save(bidder);
+        userRepository.save(bidder);
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setEmail(bidder.getEmail());
         registerResponse.setId(bidder.getId());
@@ -90,6 +96,10 @@ public class BidderServiceImpl implements BidderService {
     public List<Product> viewProduct() {
         return productService.viewAllProducts();
     }
+
+
+//    @Override
+//    public
 
 
 }

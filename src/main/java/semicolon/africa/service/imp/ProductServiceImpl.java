@@ -1,4 +1,5 @@
 package semicolon.africa.service.imp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import semicolon.africa.data.models.Product;
@@ -21,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private  final SellerRepository sellerRepository;
 
+    @Autowired
     public ProductServiceImpl(ProductRepository productRepository, SellerRepository sellerRepository) {
         this.productRepository = productRepository;
         this.sellerRepository = sellerRepository;
@@ -43,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBidStopTime(endTime);
         seller.get().getProducts().add(product);
         productRepository.save(product);
+        sellerRepository.save(seller.get());
         AuctionResponse auctionResponse = new AuctionResponse();
         auctionResponse.setProductId(product.getId());
         auctionResponse.setProductName(product.getName());
@@ -50,24 +53,24 @@ public class ProductServiceImpl implements ProductService {
         return auctionResponse;
     }
 
-    @Scheduled(fixedRate = 86400000)
-    public void removeExpiredProduct() {
-        List<Product> products = productRepository.findAll();
-        List<Product> productsToDelete = new ArrayList<>();
-
-        LocalDateTime now = LocalDateTime.now();
-
-        for (Product product : products) {
-            if (product.getBidStopTime() != null) {
-                LocalDateTime bidStopTimeWithMargin = product.getBidStopTime().plusDays(1);
-                if (now.isAfter(bidStopTimeWithMargin)) {
-                    productsToDelete.add(product);
-                }
-            }
-        }
-
-        productRepository.deleteAll(productsToDelete);
-    }
+//    @Scheduled(fixedRate = 86400000)
+//    public void removeExpiredProduct() {
+//        List<Product> products = productRepository.findAll();
+//        List<Product> productsToDelete = new ArrayList<>();
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        for (Product product : products) {
+//            if (product.getBidStopTime() != null) {
+//                LocalDateTime bidStopTimeWithMargin = product.getBidStopTime().plusDays(1);
+//                if (now.isAfter(bidStopTimeWithMargin)) {
+//                    productsToDelete.add(product);
+//                }
+//            }
+//        }
+//
+//        productRepository.deleteAll(productsToDelete);
+//    }
 
 
 

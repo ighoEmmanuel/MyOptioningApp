@@ -12,5 +12,4 @@ public class LogInResponse {
     String email;
     String role;
     Profile profile;
-
 }

@@ -1,8 +1,5 @@
 package semicolon.africa.controllers;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import semicolon.africa.dtos.reposonse.AuctionResponse;
 import semicolon.africa.dtos.reposonse.RegisterResponse;
 import semicolon.africa.dtos.request.AuctionProductDto;
@@ -14,7 +11,7 @@ import semicolon.africa.service.imp.SellerServiceImpl;
 @RequestMapping("/api")
 public class SellerController {
 
-    private SellerService sellerService;
+    private final SellerService sellerService;
 
     public SellerController(SellerServiceImpl sellerService) {
         this.sellerService = sellerService;
@@ -28,6 +25,11 @@ public class SellerController {
     @PostMapping("/addProduct")
     public AuctionResponse auctionProduct(@RequestBody AuctionProductDto addProductDto) {
         return sellerService.auctionProduct(addProductDto);
+    }
+
+    @GetMapping("/highest/bidder")
+    public String highestBidder(@RequestBody String productId) {
+        return sellerService.highestBidder(productId);
     }
 
 }
