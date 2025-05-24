@@ -11,5 +11,5 @@ public class Profile {
     private String email;
     private Address address;
     private AccountStatus accountStatus;
-    private byte[] image;
+    private String url;
 }

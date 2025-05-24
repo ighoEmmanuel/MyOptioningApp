@@ -45,6 +45,7 @@ public class AuthLoginServiceImp implements AuthLoginService {
                 logInResponse.setEmail(email);
                 logInResponse.setUsername(admin.getUserName());
                 logInResponse.setRole("ADMIN");
+                logInResponse.setProfile(admin.getProfile());
                 return logInResponse;
             }
             throw new PasswordError("Invalid password or email");
@@ -58,6 +59,7 @@ public class AuthLoginServiceImp implements AuthLoginService {
                 logInResponse.setEmail(bidder.getEmail());
                 logInResponse.setUsername(bidder.getUserName());
                 logInResponse.setRole("Bidder");
+                logInResponse.setProfile(bidder.getProfile());
                 return logInResponse;
             }
             throw new PasswordError("Invalid password or email");
@@ -71,6 +73,7 @@ public class AuthLoginServiceImp implements AuthLoginService {
                 logInResponse.setEmail(seller.getEmail());
                 logInResponse.setUsername(seller.getUserName());
                 logInResponse.setRole("SELLER");
+                logInResponse.setProfile(seller.getProfile());
                 return logInResponse;
             }
             throw new PasswordError("Invalid password or email");

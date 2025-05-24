@@ -11,6 +11,7 @@ import semicolon.africa.dtos.request.ProfileDto;
 import semicolon.africa.service.BidderService;
 import semicolon.africa.service.UserService;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ProfileResponse updateProfile(ProfileDto profileDto) {
+    public ProfileResponse updateAddress(ProfileDto profileDto) {
         ProfileResponse profileResponse = new ProfileResponse();
         if (profileDto == null) {
             throw new IllegalArgumentException("Profile data cannot be null");
@@ -58,6 +59,12 @@ public class UserServiceImpl implements UserService {
                     bidderRepository.save(presentBidder);
                     profileResponse.setProfile(presentBidder.getProfile());
                     return profileResponse;
+                }else{
+                    profile.setAddress(profileDto.getAddress());
+                    presentBidder.setProfile(profile);
+                    bidderRepository.save(presentBidder);
+                    profileResponse.setProfile(presentBidder.getProfile());
+                    return profileResponse;
                 }
             }
         }else{
@@ -73,7 +80,47 @@ public class UserServiceImpl implements UserService {
                     sellerRepository.save(presentSeller);
                     profileResponse.setProfile(presentSeller.getProfile());
                     return profileResponse;
+                }else{
+                    profile.setAddress(profileDto.getAddress());
+                    presentSeller.setProfile(profile);
+                    sellerRepository.save(presentSeller);
+                    profileResponse.setProfile(presentSeller.getProfile());
+                    return profileResponse;
                 }
+            }
+        }
+        throw new IllegalArgumentException("User not found");
+    }
+
+
+    @Override
+    public ProfileResponse updateImage(String id, String url, String role) {
+        ProfileResponse profileResponse = new ProfileResponse();
+        if(Objects.equals(role, "") || role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
+        if(url == null || Objects.equals(url, "")) {
+            throw new IllegalArgumentException("Url cannot be null");
+        }
+        if("Bidder".equals(role)) {
+            Optional<Bidder> bidder = bidderRepository.findById(id);
+            if (bidder.isPresent()) {
+                Profile profile = bidder.get().getProfile();
+                profile.setUrl(url);
+                bidderRepository.save(bidder.get());
+                profileResponse.setProfile(bidder.get().getProfile());
+                return profileResponse;
+            }
+
+        }
+        if("Seller".equals(role)) {
+            Optional<Seller> seller = sellerRepository.findById(id);
+            if (seller.isPresent()) {
+                Profile profile = seller.get().getProfile();
+                profile.setUrl(url);
+                sellerRepository.save(seller.get());
+                profileResponse.setProfile(seller.get().getProfile());
+                return profileResponse;
             }
         }
         throw new IllegalArgumentException("User not found");

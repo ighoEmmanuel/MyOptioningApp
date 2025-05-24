@@ -20,7 +20,7 @@ class BidderServiceImplTest {
     }
 
     @Test
-    public void whenAUserLogin_CanBid(){
+    public void whenAUserLogin_HeOrSheCanBid(){
 
     }
 

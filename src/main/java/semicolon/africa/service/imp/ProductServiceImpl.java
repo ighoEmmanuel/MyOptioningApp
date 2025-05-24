@@ -33,25 +33,36 @@ public class ProductServiceImpl implements ProductService {
     public AuctionResponse auctionProduct(AuctionProductDto productDto) {
         String sellerId = productDto.getSellerId();
         Optional<Seller> seller = sellerRepository.findById(sellerId);
+
+        if (seller.isEmpty()) {
+            throw new IllegalArgumentException("Seller with ID " + sellerId + " does not exist.");
+        }
+
         LocalDateTime startTime = productDto.getBidStart();
         LocalDateTime endTime = productDto.getBidStop();
-        validateAuctionTimes(startTime,endTime);
+        validateAuctionTimes(startTime, endTime);
+
         BigDecimal price = productDto.getPrice();
         String productName = productDto.getProductName();
+
         Product product = new Product();
         product.setPrice(price);
         product.setName(productName);
         product.setBidStartTime(startTime);
         product.setBidStopTime(endTime);
+
         seller.get().getProducts().add(product);
         productRepository.save(product);
         sellerRepository.save(seller.get());
+
         AuctionResponse auctionResponse = new AuctionResponse();
         auctionResponse.setProductId(product.getId());
         auctionResponse.setProductName(product.getName());
         auctionResponse.setPrice(product.getPrice());
+
         return auctionResponse;
     }
+
 
 //    @Scheduled(fixedRate = 86400000)
 //    public void removeExpiredProduct() {

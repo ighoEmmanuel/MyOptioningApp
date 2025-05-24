@@ -21,9 +21,11 @@ public class UserController {
         this.userService = userServiceImpl;
     }
 
-    @PostMapping("/update/profile")
-    public ProfileResponse updateProfile(@Valid @RequestBody ProfileDto profileDto) {
-        return userService.updateProfile(profileDto);
+    @PostMapping("/update/address")
+    public ProfileResponse updateAddress(@Valid @RequestBody ProfileDto profileDto) {
+        return userService.updateAddress(profileDto);
     }
+
+//    @PostMapping
 
 }
