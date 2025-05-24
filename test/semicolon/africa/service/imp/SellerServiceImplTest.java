@@ -74,7 +74,7 @@ class SellerServiceImplTest {
     }
 
     @Test
-    public void auctioningMyProductAndGetTheResponse() {
+    public void AuctionAProductAndCheckIfTheResponseIsNotNullTest() {
         Seller seller = new Seller();
         seller.setUserName("Jonathan");
         seller.setEmail("jonathan@gmai.com");
@@ -90,12 +90,31 @@ class SellerServiceImplTest {
         auctionProductDto.setBidStop(LocalDateTime.now().plusHours(2));
 
         AuctionResponse auctionResponse = sellerService.auctionProduct(auctionProductDto);
-        System.out.println(auctionResponse);
         assertNotNull(auctionResponse);
     }
 
     @Test
-    public void getTheHighestBidderOf_ofTheProductAuction() {
+    public void TryTOAuctionAProductWithTheBidStartingTimeAfterTheNormalTimeAndAssertItThrowsErrorTest() {
+        Seller seller = new Seller();
+        seller.setUserName("Jonathan");
+        seller.setEmail("jonathan@gmai.com");
+        seller.setPassword("password");
+
+        Seller savedSeller = sellerRepository.save(seller);
+
+        AuctionProductDto auctionProductDto = new AuctionProductDto();
+        auctionProductDto.setSellerId(savedSeller.getId());
+        auctionProductDto.setProductName("Maths");
+        auctionProductDto.setPrice(BigDecimal.valueOf(1000));
+        auctionProductDto.setBidStart(LocalDateTime.now().minusDays(1));
+        auctionProductDto.setBidStop(LocalDateTime.now().plusHours(2));
+
+       assertThrows(IllegalArgumentException.class,() -> {
+           sellerService.auctionProduct(auctionProductDto);
+       },"Start time must be in the future");
 
     }
+
+//    @Test
+//    public void
 }
