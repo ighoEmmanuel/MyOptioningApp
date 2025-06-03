@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import semicolon.africa.data.models.Seller;
 import semicolon.africa.data.repositories.BidderRepository;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+
 @SpringBootTest
 class ProductServiceImplTest {
 
@@ -29,6 +31,7 @@ class ProductServiceImplTest {
     @Autowired
     private SellerRepository sellerRepository;
 
+    @Autowired
     private ProductService productService;
 
 
@@ -42,6 +45,11 @@ class ProductServiceImplTest {
         productRepository.deleteAll();
         sellerRepository.deleteAll();
     }
+    @Test
+    void contextLoads() {
+        assertTrue(true); // Just to see if Spring context loads at all
+    }
+
 
     @Test
     void testAProductCanBeAuctionedWithValidTime() {

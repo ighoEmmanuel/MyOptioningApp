@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import semicolon.africa.data.repositories.BidderRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
 
 @SpringBootTest
 class BidderServiceImplTest {

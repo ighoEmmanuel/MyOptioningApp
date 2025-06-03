@@ -17,7 +17,7 @@
 <!--    -->
 
     <properties>
-        <java.version>23</java.version> <!-- Use a supported Java version for Spring Boot 3 -->
+        <java.version>21</java.version> <!-- Use a supported Java version for Spring Boot 3 -->
     </properties>
 
     <dependencies>
@@ -58,8 +58,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
 
 
     </dependencies>
